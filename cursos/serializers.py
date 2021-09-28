@@ -22,6 +22,19 @@ class AvaliacaoSerializer(serializers.ModelSerializer):
 
 
 class CursoSerializer(serializers.ModelSerializer):
+    
+    # Nested Relationship (recomended mostly for one-to-one relationship)  
+    #avaliacoes = AvaliacaoSerializer(many=True, read_only=True)
+
+    # Hyperlinked Related Field (mostly for one-to-many relationship)
+    # avaliacoes = serializers.HyperlinkedRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     view_name='avaliacao-detail'
+    # )
+
+    # Primary Key Related Field (ideal for milions of id's)
+    avaliacoes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Curso
@@ -30,5 +43,6 @@ class CursoSerializer(serializers.ModelSerializer):
             'título',
             'url',
             'criacao',
-            'ativo'
+            'ativo',
+            'avaliacoes'
         )
