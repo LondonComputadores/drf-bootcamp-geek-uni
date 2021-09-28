@@ -54,8 +54,20 @@ class CursoViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def avaliacoes(self, request, pk=None):
-        curso = self.get_object()
-        serializer = AvaliacaoSerializer(curso.avaliacoes.all(), many=True)
+        self.pagination_class.page_size = 1
+        avaliacoes = Avaliacao.objects.filter(curso_id=pk)
+        page = self.paginate_queryset(avaliacoes)
+
+        if page is not None:
+            serializer = AvaliacaoSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        # This line below was removed after pagination config from line 57 to 63
+        # curso = self.get_object()
+
+        # serializer = AvaliacaoSerializer(curso.avaliacoes.all(), many=True)
+        # Ths line commented above was refactored to this line below
+        serializer = AvaliacaoSerializer(avaliacoes, many=True)
         return Response(serializer.data)
 
 
